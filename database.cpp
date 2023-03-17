@@ -37,7 +37,7 @@ ReturnSuccess DataBase::createTable(const QString& table)
     return GoodCreateTable;
 }
 
-ReturnSuccess DataBase::insertValue(const QString& table, const std::string& question, const std::string& answer)
+ReturnSuccess DataBase::insertValue(const QString& table, const QString& question, const QString& answer)
 {
     if (!db.tables().contains(table))
     {
@@ -46,8 +46,8 @@ ReturnSuccess DataBase::insertValue(const QString& table, const std::string& que
     }
     QSqlQuery query(db);
     query.prepare("INSERT INTO " + table + " (question, answer) VALUES (:question, :answer)");
-    query.bindValue(":question", question.c_str());
-    query.bindValue(":answer", answer.c_str());
+    query.bindValue(":question", question);
+    query.bindValue(":answer", answer);
 
     if (!query.exec())
     {

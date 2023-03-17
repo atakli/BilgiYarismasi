@@ -1,6 +1,3 @@
-// Copyright (C) 2016 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
 #ifndef DATABASE_H
 #define DATABASE_H
 
@@ -31,7 +28,7 @@ public:
     };
     QSqlDatabase& getDataBase();
     ReturnSuccess createTable(const QString &table);
-    ReturnSuccess insertValue(const QString& table, const std::string& question, const std::string& answer);
+    ReturnSuccess insertValue(const QString& table, const QString &question, const QString &answer);
 private:
     QSqlDatabase db;
 };
