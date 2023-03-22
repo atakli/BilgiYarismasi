@@ -10,8 +10,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    Dialog(QSqlRelationalTableModel *albums, QDomDocument details,
-           QFile *output, QWidget *parent = nullptr);
+	Dialog(QSqlRelationalTableModel *albums, QDomDocument details, QFile *output, QWidget *parent = nullptr);
 
 private slots:
     void revert();
@@ -33,8 +32,8 @@ private:
     QDomDocument albumDetails;
     QFile *outputFile;
 
-    QLineEdit *artistEditor;
-    QLineEdit *titleEditor;
+	QLineEdit *competitionEditor;
+//    QLineEdit *titleEditor;
     QSpinBox *yearEditor;
     QLineEdit *tracksEditor;
 };

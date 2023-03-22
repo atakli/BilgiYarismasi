@@ -1,5 +1,6 @@
 #include "database.h"
-#include "mainwindow.h"
+#include "qaWindow.h"
+#include "mainwindownew.h"
 
 #include <QApplication>
 #include <QFile>
@@ -12,8 +13,12 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    if (!createConnection())
-        return EXIT_FAILURE;
+	if (!createConnection())
+		return EXIT_FAILURE;
+
+	MainWindowNew neww;
+	neww.startTimer();
+	neww.show();
 
     QFile albumDetails("albumdetails.xml");
     MainWindow window("artists", "albums", &albumDetails);

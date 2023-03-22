@@ -22,22 +22,26 @@ Dialog::Dialog(QSqlRelationalTableModel *albums, QDomDocument details, QFile *ou
 
 void Dialog::submit()
 {
-    QString artist = artistEditor->text();
-    QString title = titleEditor->text();
+	const QString competition = competitionEditor->text();
+//    QString title = titleEditor->text();
 
-    if (artist.isEmpty() || title.isEmpty()) {
-        QString message(tr("Please provide both the name of the artist "
-                           "and the title of the album."));
+//	if (artist.isEmpty() || title.isEmpty())
+	if (competition.isEmpty())
+	{
+		QString message(tr("Yarışma ismi girmediniz"));
         QMessageBox::information(this, tr("Add Album"), message);
-    } else {
-        int artistId = findArtistId(artist);
-        int albumId = addNewAlbum(title, artistId);
+	}
+	else
+	{
+		int artistId = findArtistId(competition);
+//        int albumId = addNewAlbum(title, artistId);
+		int albumId = addNewAlbum("", artistId);
 
         QStringList tracks;
         tracks = tracksEditor->text().split(QLatin1Char(','), Qt::SkipEmptyParts);
         addTracks(albumId, tracks);
 
-        increaseAlbumCount(indexOfArtist(artist));
+		increaseAlbumCount(indexOfArtist(competition));
         accept();
     }
 }
@@ -65,10 +69,15 @@ int Dialog::addNewArtist(const QString &name)
 
     int id = generateArtistId();
 
-    QSqlField f1("id", QMetaType(QMetaType::Int));
-    QSqlField f2("artist", QMetaType(QMetaType::QString));
-    QSqlField f3("albumcount", QMetaType(QMetaType::Int));
-
+#if QT_VERSION < QT_VERSION_CHECK(5,15,3)
+	QSqlField f1("id", QVariant::Int);
+	QSqlField f2("artist", QVariant::String);
+	QSqlField f3("albumcount", QVariant::Int);
+#else
+	QSqlField f1("id", QMetaType(QMetaType::Int));
+	QSqlField f2("artist", QMetaType(QMetaType::QString));
+	QSqlField f3("albumcount", QMetaType(QMetaType::Int));
+#endif
     f1.setValue(QVariant(id));
     f2.setValue(QVariant(name));
     f3.setValue(QVariant(0));
@@ -84,18 +93,23 @@ int Dialog::addNewAlbum(const QString &title, int artistId)
 {
     int id = generateAlbumId();
     QSqlRecord record;
-
-    QSqlField f1("albumid", QMetaType(QMetaType::Int));
-    QSqlField f2("title", QMetaType(QMetaType::QString));
-    QSqlField f3("artistid", QMetaType(QMetaType::Int));
-    QSqlField f4("year", QMetaType(QMetaType::Int));
-
+#if QT_VERSION < QT_VERSION_CHECK(5,15,3)
+	QSqlField f1("albumid", QVariant::Int);
+//	QSqlField f2("title", QVariant::String);
+	QSqlField f3("artistid", QVariant::Int);
+	QSqlField f4("year", QVariant::Int);
+#else
+	QSqlField f1("albumid", QMetaType(QMetaType::Int));
+//	QSqlField f2("title", QMetaType(QMetaType::QString));
+	QSqlField f3("artistid", QMetaType(QMetaType::Int));
+	QSqlField f4("year", QMetaType(QMetaType::Int));
+#endif
     f1.setValue(QVariant(id));
-    f2.setValue(QVariant(title));
+//    f2.setValue(QVariant(title));
     f3.setValue(QVariant(artistId));
     f4.setValue(QVariant(yearEditor->value()));
     record.append(f1);
-    record.append(f2);
+//    record.append(f2);
     record.append(f3);
     record.append(f4);
 
@@ -154,23 +168,23 @@ void Dialog::increaseAlbumCount(QModelIndex artistIndex)
 
 void Dialog::revert()
 {
-    artistEditor->clear();
-    titleEditor->clear();
+	competitionEditor->clear();
+//    titleEditor->clear();
     yearEditor->setValue(QDate::currentDate().year());
     tracksEditor->clear();
 }
 
 QGroupBox *Dialog::createInputWidgets()
 {
-    QGroupBox *box = new QGroupBox(tr("Add Album"));
+	QGroupBox *box = new QGroupBox(tr("Yeni Yarışma Ekle"));
 
-    QLabel *artistLabel = new QLabel(tr("Artist:"));
-    QLabel *titleLabel = new QLabel(tr("Title:"));
+	QLabel *artistLabel = new QLabel(tr("Yarışma ismi:"));
+//	QLabel *titleLabel = new QLabel(tr(":"));
     QLabel *yearLabel = new QLabel(tr("Year:"));
     QLabel *tracksLabel = new QLabel(tr("Tracks (separated by comma):"));
 
-    artistEditor = new QLineEdit;
-    titleEditor = new QLineEdit;
+	competitionEditor = new QLineEdit;
+//    titleEditor = new QLineEdit;
 
     yearEditor = new QSpinBox;
     yearEditor->setMinimum(1900);
@@ -182,9 +196,9 @@ QGroupBox *Dialog::createInputWidgets()
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(artistLabel, 0, 0);
-    layout->addWidget(artistEditor, 0, 1);
-    layout->addWidget(titleLabel, 1, 0);
-    layout->addWidget(titleEditor, 1, 1);
+	layout->addWidget(competitionEditor, 0, 1);
+//    layout->addWidget(titleLabel, 1, 0);
+//    layout->addWidget(titleEditor, 1, 1);
     layout->addWidget(yearLabel, 2, 0);
     layout->addWidget(yearEditor, 2, 1);
     layout->addWidget(tracksLabel, 3, 0, 1, 2);

@@ -1,11 +1,15 @@
 HEADERS   = database.h \
             dialog.h \
-            mainwindow.h
+            mainwindownew.h \
+            qaWindow.h \
+            stackedwidget.h
 RESOURCES = masterdetail.qrc
 SOURCES   = dialog.cpp \
             database.cpp \
             main.cpp \
-            mainwindow.cpp
+            mainwindownew.cpp \
+            qaWindow.cpp \
+            stackedwidget.cpp
 
 QT += sql widgets
 QT += xml widgets
@@ -13,6 +17,5 @@ requires(qtConfig(tableview))
 
 EXAMPLE_FILES = albumdetails.xml
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/sql/masterdetail
-INSTALLS += target
+FORMS += \
+    stackedwidget.ui

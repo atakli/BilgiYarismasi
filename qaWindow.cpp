@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "qaWindow.h"
 #include "dialog.h"
 
 #include <QtWidgets>
@@ -120,7 +120,7 @@ void MainWindow::getTrackList(QDomNode album)
     }
 }
 
-void MainWindow::addAlbum()
+void MainWindow::addCompetition()
 {
     Dialog *dialog = new Dialog(model, albumData, file, this);
     int accepted = dialog->exec();
@@ -229,10 +229,10 @@ QGroupBox* MainWindow::createArtistGroupBox()
     artistView->setModel(model->relationModel(2));
     artistView->setModelColumn(1);
 
-    connect(artistView, &QComboBox::currentIndexChanged,
-            this, &MainWindow::changeArtist);
+	connect(artistView, SIGNAL(currentIndexChanged(int)), this, SLOT(changeArtist(int)));
+	QGroupBox *box = new QGroupBox(tr("Artist"));
 
-    QGroupBox *box = new QGroupBox(tr("Artist"));
+//	qDebug() << "sizePolicy:" << box->sizePolicy();
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(artistView, 0, 0);
@@ -243,10 +243,10 @@ QGroupBox* MainWindow::createArtistGroupBox()
 
 QGroupBox* MainWindow::createAlbumGroupBox()
 {
-    QGroupBox *box = new QGroupBox(tr("Album"));
+	QGroupBox *box = new QGroupBox(tr("Soru && Cevaplar"));
 
     albumView = new QTableView;
-    albumView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	albumView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     albumView->setSortingEnabled(true);
     albumView->setSelectionBehavior(QAbstractItemView::SelectRows);
     albumView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -330,7 +330,7 @@ void MainWindow::createMenuBar()
     helpMenu->addAction(aboutQtAction);
 
     connect(addAction, &QAction::triggered,
-            this, &MainWindow::addAlbum);
+			this, &MainWindow::addCompetition);
     connect(deleteAction, &QAction::triggered,
             this, &MainWindow::deleteAlbum);
     connect(quitAction, &QAction::triggered,

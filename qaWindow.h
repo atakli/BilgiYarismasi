@@ -25,7 +25,7 @@ public:
 
 private slots:
     void about();
-    void addAlbum();
+    void addCompetition();
     void changeArtist(int row);
     void deleteAlbum();
     void showAlbumDetails(QModelIndex index);
