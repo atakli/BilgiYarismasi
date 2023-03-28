@@ -1,8 +1,10 @@
 #include "database.h"
 
-DataBase::DataBase() : db(QSqlDatabase::addDatabase("QSQLITE"))
+#include <expected>
+
+DataBase::DataBase(const QString &dbName) : db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    db.setDatabaseName("bilgiYarismasi.db");
+    db.setDatabaseName(dbName);
     if (!db.open())
     {
         qCritical() << "Failed to open database:" << db.lastError().text();
@@ -15,44 +17,76 @@ DataBase::~DataBase()
     db.close();
 }
 
-QSqlDatabase& DataBase::getDataBase()
+QSqlDatabase DataBase::getDataBase() const
 {
     return db;
 }
 
-ReturnSuccess DataBase::createTable(const QString& table)
+//ReturnSuccess DataBase::createTable(const QString& table)
+ReturnSuccess DataBase::createTable(const QString& table_creation_query)
 {
-    if (!db.tables().contains(table))
-    {
+//    if (!db.tables().contains(table))
+//    {
         QSqlQuery query(db);
-        const QString table_creation_query = "CREATE TABLE " + table + " (question TEXT PRIMARY KEY, answer TEXT)";
-        if (!query.exec(table_creation_query))
+//        const QString table_creation_query = "CREATE TABLE " + table + " (question TEXT PRIMARY KEY, answer TEXT)";
+        if (!query.exec("CREATE TABLE IF NOT EXISTS " + table_creation_query))
         {
             qCritical() << "Failed to create table:" << query.lastError().text();
             return BadCreateTable;
         }
-    }
-    else
-        qDebug() << "Table is already present";
+//    }
+//    else
+//        qDebug() << "Table is already present";
     return GoodCreateTable;
 }
 
-ReturnSuccess DataBase::insertValue(const QString& table, const QString& question, const QString& answer)
+//ReturnSuccess DataBase::insertValue(const QString& table, const QString& insertQuery)
+ReturnSuccess DataBase::insertValue(const QString& table, const QStringList& values)
 {
     if (!db.tables().contains(table))
     {
         qCritical() << "No such table!";
         return NoSuchTable;
     }
-    QSqlQuery query(db);
-    query.prepare("INSERT INTO " + table + " (question, answer) VALUES (:question, :answer)");
-    query.bindValue(":question", question);
-    query.bindValue(":answer", answer);
+    QSqlQuery query("SELECT * from " + table, db);
 
-    if (!query.exec())
+    const QString insertQuery = values.join(", ");
+
+    while (query.next())
+    {
+        QStringList entry;
+        for (int i = 0; i < values.size(); ++i)
+            entry += query.value(i).toString();
+        if (entry.join(", ") == insertQuery)
+            return SameEntryExists;
+    }
+
+    if (!query.exec("INSERT INTO " + table + " VALUES (" + insertQuery + ")"))
     {
         qCritical() << "Failed to insert data into table:" << query.lastError().text();
         return BadInsertion;
     }
     return GoodInsertion;
+}
+
+std::expected<int, ReturnSuccess> DataBase::calculate_current_id_of_table(const QString& table) const
+{
+//    Query query;
+    QSqlQuery query(db);
+//    if (!query.exec("select question from yarisma where rowid = 1"))    // 0 yok. 1'den basliyor
+    if (!query.exec("select max(rowid) from " + table))    // 0 yok. 1'den basliyor
+    {
+        qCritical() << "Failed to query max rowid:" << query.lastError().text();
+        return std::unexpected {RowIdQueryFailed};
+    }
+    if (query.next())
+    {
+        return query.value(0).toInt();
+    }
+    qDebug() << "No Entry";
+    return std::unexpected {NoEntry};
+//    return query.value("id").toInt();
+//    return query.record()
+//    return query.at()
+//    return query.next()
 }

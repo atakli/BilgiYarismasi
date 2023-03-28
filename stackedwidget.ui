@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1073</width>
-    <height>809</height>
+    <width>1007</width>
+    <height>841</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>StackedWidget</string>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
   </property>
   <widget class="QWidget" name="settingsPage">
    <property name="sizePolicy">
@@ -20,7 +23,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="startCompetitionPushButton">
     <property name="geometry">
      <rect>
       <x>9</x>
@@ -84,6 +87,32 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="addCompetitionButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>144</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>yarışma ekle</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addQAButton">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>10</y>
+      <width>144</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>soru &amp;&amp; cevap ekle</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="competitionPage">
    <property name="sizePolicy">
@@ -99,23 +128,30 @@
        <widget class="QLCDNumber" name="lcdNumber"/>
       </item>
       <item>
+       <widget class="QLabel" name="questionLabel">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="continuePausePushButton">
           <property name="text">
-           <string>Başlat/Beklet</string>
+           <string>Devam Ettir / Duraklat</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="settingsPushButton">
           <property name="text">
            <string>Ayarlara Dön</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="finishCompetitionPushButton">
           <property name="text">
            <string>Yarışmayı Bitir</string>
           </property>

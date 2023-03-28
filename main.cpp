@@ -4,8 +4,11 @@
 
 #include <QApplication>
 #include <QFile>
+#include <QDir>
 
 #include <stdlib.h>
+
+QString dbName = ".bilgiyarismasi.db";
 
 int main(int argc, char *argv[])
 {
@@ -13,15 +16,15 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-	if (!createConnection())
-		return EXIT_FAILURE;
+    QDir::setCurrent(QDir::home().absolutePath());
+    MainWindowNew neww;
+    neww.show();
 
-	MainWindowNew neww;
-	neww.startTimer();
-	neww.show();
+//    if (!createConnection())
+//        return EXIT_FAILURE;
+//    QFile albumDetails("albumdetails.xml");
+//    MainWindow window("artists", "albums", &albumDetails);
+//    window.show();
 
-    QFile albumDetails("albumdetails.xml");
-    MainWindow window("artists", "albums", &albumDetails);
-    window.show();
     return app.exec();
 }

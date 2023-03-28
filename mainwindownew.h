@@ -1,20 +1,40 @@
 #ifndef MAINWINDOWNEW_H
 #define MAINWINDOWNEW_H
 
-#include <QMainWindow>
+#include <QStackedWidget>
 #include <QTimer>
 
-namespace Ui { class MainWindow; }
+#include "database.h"
+#include "addqaform.h"
 
-class MainWindowNew : public QMainWindow
+namespace Ui { class StackedWidget; }
+
+extern QString dbName;
+
+struct Question
 {
+    QString question;
+    int duration_min, duration_sec;
+};
+
+class MainWindowNew : public QStackedWidget
+{
+    Q_OBJECT
 public:
-	MainWindowNew(QMainWindow* parent = nullptr);
+    MainWindowNew(QStackedWidget* parent = nullptr);
 	~MainWindowNew();
-	Ui::MainWindow* ui;
-	void startTimer();
+    Ui::StackedWidget* ui;
+    void startTimer(int duration_as_sec);
 private:
-	QTimer *timer = nullptr;
+    DataBase db{dbName};
+    AddqaForm addqaForm{db};
+    QTimer *timer = nullptr;
+    QTimer *timer_whole_competition = nullptr;
+    void finishCompetition();
+    void loopOverQuestions();
+private slots:
+    void startCompetition();
+    void addQA();
 };
 
 #endif // MAINWINDOWNEW_H

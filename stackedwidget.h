@@ -3,9 +3,7 @@
 
 #include <QStackedWidget>
 
-namespace Ui {
-class StackedWidget;
-}
+namespace Ui { class StackedWidget; }
 
 class StackedWidget : public QStackedWidget
 {
