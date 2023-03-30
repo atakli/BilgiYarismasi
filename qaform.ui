@@ -6,34 +6,52 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>445</width>
+    <width>482</width>
     <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Soru &amp; Cevap Listesi</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Yarışma İsmi</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QComboBox" name="comboBox"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <widget class="QTableView" name="tableView">
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
+     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
     </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="submitButton">
        <property name="text">
-        <string>Tümünü Seç</string>
+        <string>Değişiklikleri Uygula</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="revertButton">
        <property name="text">
-        <string>Hiçbirini Seçme</string>
+        <string>Değişiklikleri Geri Al</string>
        </property>
       </widget>
      </item>
@@ -41,6 +59,13 @@
       <widget class="QPushButton" name="addqaButton">
        <property name="text">
         <string>Yeni Soru&amp;&amp;Cevap Ekle</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="showAnswersPushButton">
+       <property name="text">
+        <string>Cevapları Göster</string>
        </property>
       </widget>
      </item>

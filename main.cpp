@@ -1,4 +1,3 @@
-#include "database.h"
 #include "qaWindow.h"
 #include "mainwindownew.h"
 
@@ -6,13 +5,11 @@
 #include <QFile>
 #include <QDir>
 
-#include <stdlib.h>
-
-QString dbName = ".bilgiyarismasi.db";
+//QString dbName = ".bilgiyarismasi.db";
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(masterdetail);
+//    Q_INIT_RESOURCE(masterdetail);
 
     QApplication app(argc, argv);
 

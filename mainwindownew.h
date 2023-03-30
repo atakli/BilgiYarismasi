@@ -4,12 +4,13 @@
 #include <QStackedWidget>
 #include <QTimer>
 
-#include "database.h"
-#include "addqaform.h"
+#include "qaform.h"
 
 namespace Ui { class StackedWidget; }
 
 extern QString dbName;
+
+bool createConnection();
 
 struct Question
 {
@@ -26,14 +27,17 @@ public:
     Ui::StackedWidget* ui;
     void startTimer(int duration_as_sec);
 private:
-    DataBase db{dbName};
-    AddqaForm addqaForm{db};
-    QTimer *timer = nullptr;
-    QTimer *timer_whole_competition = nullptr;
-    void finishCompetition();
-    void loopOverQuestions();
+    int recordIndex = 0;
+    QaForm qaForm;
+    QTimer *timer_clock = nullptr;
+    void (MainWindowNew::*slot)();
+    bool isChangeNextQuestionImmediately;
+    QTimer *timer_question = nullptr;
 private slots:
+    void finishCompetition();
     void startCompetition();
+    void nextQuestion();
+    void browseMusic();
     void addQA();
 };
 

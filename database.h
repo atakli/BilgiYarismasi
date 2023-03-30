@@ -6,9 +6,8 @@
 #include <QSqlError>
 #include <QDebug>
 
-#include <expected>
-
-enum ReturnSuccess {GoodCreateTable, BadCreateTable, BadInsertion, GoodInsertion, NoSuchTable, RowIdQueryFailed, NoEntry, SameEntryExists};
+enum ReturnSuccess {GoodCreateTable, BadCreateTable, BadInsertion, GoodInsertion, NoSuchTable, RowIdQueryFailed = -2, NoEntry = -1, SameEntryExists};
+// TODO: değerleri kontrol et. pozitif olmaması gerekenler olabilir. RowIdQueryFailed gibi
 
 struct Person
 {
@@ -35,7 +34,7 @@ public:
     QSqlDatabase getDataBase() const;
     ReturnSuccess createTable(const QString &table_creation_query);
     ReturnSuccess insertValue(const QString& table, const QStringList& values);
-    std::expected<int, ReturnSuccess> calculate_current_id_of_table(const QString& table) const;
+    int calculate_current_id_of_table(const QString& table) const;
 private:
 
     QSqlDatabase db;

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>StackedWidget</string>
+   <string>Yarışma Uygulaması</string>
   </property>
   <property name="currentIndex">
    <number>0</number>
@@ -40,32 +40,6 @@
     </property>
     <property name="text">
      <string>Yarışmayı Başlat</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="musicSelectButton">
-    <property name="geometry">
-     <rect>
-      <x>283</x>
-      <y>10</y>
-      <width>144</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Müzik Seç</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>14</y>
-      <width>267</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Müzik Olsun mu?</string>
     </property>
    </widget>
    <widget class="QLabel" name="musicNameLabel">
@@ -97,7 +71,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>yarışma ekle</string>
+     <string>Yarışma Ekle</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addQAButton">
@@ -110,8 +84,94 @@
      </rect>
     </property>
     <property name="text">
-     <string>soru &amp;&amp; cevap ekle</string>
+     <string>Soru &amp;&amp; Cevap Listesi</string>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="NextQGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>260</y>
+      <width>249</width>
+      <height>70</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Bir sorudan diğerine hemen geçmesin</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>İki soru arasında beklenecek süre: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="musicGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>134</width>
+      <height>99</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>134</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="title">
+     <string>Müzik Olsun mu?</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="musicSelectButton">
+         <property name="text">
+          <string>Müzik Seç</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="musicLineEdit"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QWidget" name="competitionPage">
@@ -124,13 +184,44 @@
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
       <item>
-       <widget class="QLCDNumber" name="lcdNumber"/>
+       <widget class="QLCDNumber" name="lcdNumber">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="questionLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Comic Sans MS</family>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::AutoText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="buddy">
+         <cstring></cstring>
         </property>
        </widget>
       </item>
@@ -140,6 +231,19 @@
          <widget class="QPushButton" name="continuePausePushButton">
           <property name="text">
            <string>Devam Ettir / Duraklat</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="nextQuestionPushButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Sonraki Soru</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -166,4 +270,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <slot>on_NextQuestionImmediately(bool)</slot>
+ </slots>
 </ui>
