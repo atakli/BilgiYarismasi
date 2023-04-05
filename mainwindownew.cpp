@@ -61,20 +61,24 @@ MainWindowNew::MainWindowNew(QStackedWidget *parent) : QStackedWidget(parent), u
     const int height = this->size().height();
     const int width = this->size().width();
 
-    connect(ui->nextQuestionPushButton, &QPushButton::clicked, [this]{ui->nextQuestionPushButton->setEnabled(false);});
-    connect(ui->nextQuestionCheckBox, &QCheckBox::clicked, this, &MainWindowNew::onClicked_continuePushButton);
-    connect(ui->returnToMainPagePushButton, &QPushButton::clicked, [this, height, width]{setCurrentIndex(CompetitionPage); this->setFixedHeight(height); this->setFixedWidth(width);});
+    connect(ui->nextQuestionPushButton, &QPushButton::clicked, this, [this]{ui->nextQuestionPushButton->setEnabled(false);});
+    connect(ui->nextQuestionCheckBox, &QCheckBox::clicked, this, &MainWindowNew::onClicked_nextQuestionCheckBox);
+    connect(ui->returnToMainPagePushButton, &QPushButton::clicked, this, [this, height, width]{setCurrentIndex(CompetitionPage); this->setFixedHeight(height); this->setFixedWidth(width);});
     connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
     connect(ui->nextQuestionPushButton, &QPushButton::clicked, this, &MainWindowNew::startQuestion);
-    connect(ui->settingsPushButton, &QPushButton::clicked, [this]{setCurrentIndex(SettingsPage); this->setFixedHeight(200); this->setFixedWidth(550);});
+    connect(ui->settingsPushButton, &QPushButton::clicked, this, [this]{setCurrentIndex(SettingsPage); this->setFixedHeight(200); this->setFixedWidth(550);});
     connect(ui->musicSelectButton, &QPushButton::clicked, this, &MainWindowNew::browseMusic);
     connect(ui->addQAButton, &QPushButton::clicked, this, &MainWindowNew::addQA);
+    connect(ui->checkUpdatesButton, &QPushButton::clicked, this, [this]{update.isNewVersionAvailable();});
 //    connect(ui->musicGroupBox, &QPushButton::clicked, this, [this](bool isActivated){if (isActivated) });
+
+    update.setParameters("https://api.github.com/repos/atakli/BilgiYarismasi/releases/latest", appName, "bilgiyarismasi.zip");
+    update.isNewVersionAvailable();
 
     player = new QMediaPlayer;
     audioOutput = new QAudioOutput;
     player->setAudioOutput(audioOutput);
-    connect(player, &QMediaPlayer::mediaStatusChanged, [this](QMediaPlayer::MediaStatus status)
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, [this](QMediaPlayer::MediaStatus status)
     {
         if (status == QMediaPlayer::EndOfMedia && ui->musicGroupBox->isChecked())
         {
@@ -114,7 +118,7 @@ void MainWindowNew::startTimer(int duration_as_sec)
 
     slot = (recordIndex++ == qaForm.getModel()->rowCount() - 1) ? &MainWindowNew::finishCompetition : &MainWindowNew::nextQuestion;
     qDebug() << "recordIndex in starttimer:" << recordIndex;
-    connect(timer_question, &QTimer::timeout, [this]{if (isWaitForNextQuestion) ui->nextQuestionPushButton->setEnabled(true); player->pause(); (this->*slot)();});
+    connect(timer_question, &QTimer::timeout, this, [this]{if (isWaitForNextQuestion) ui->nextQuestionPushButton->setEnabled(true); player->pause(); (this->*slot)();});
     timer_question->start(duration_as_sec * 1000);
 }
 
@@ -157,23 +161,18 @@ void MainWindowNew::finishCompetition()
     timer_question = nullptr;
     ui->nextQuestionPushButton->setEnabled(false);
 }
-void MainWindowNew::onClicked_continuePushButton(bool flag) // cok ilginc: bunun ismi on_clicked_continuePushButton iken hata verdi
+void MainWindowNew::onClicked_nextQuestionCheckBox(bool flag) // cok ilginc: bunun ismi on_clicked_continuePushButton iken hata verdi
 {
     isWaitForNextQuestion = flag;
 }
 void MainWindowNew::startQuestion()
 {
-    qDebug() << "recordIndex:" << recordIndex;
     const QSqlRecord record = qaForm.getModel()->record(recordIndex);
     const QString question = record.value(0).toString();
     const int duration = record.value(2).toInt();
-    qDebug() << "question:" << question;
-    qDebug() << "duration:" << duration;
     ui->questionLabel->setText(question);
     if (ui->musicGroupBox->isEnabled())
-    {
         player->play();
-    }
     startTimer(duration);
 }
 void MainWindowNew::nextQuestion()

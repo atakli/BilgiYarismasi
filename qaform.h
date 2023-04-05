@@ -19,6 +19,7 @@ public:
 
 private:
     QSqlTableModel *model;
+    QSqlDatabase db;
 //    AddQaDialog* addQaDialog;
     Ui::AddqaForm *ui;
     int rowIndex = 0;

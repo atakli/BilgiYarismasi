@@ -14,8 +14,9 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
 {
     ui->setupUi(this);
 
-    static QSqlDatabase db{QSqlDatabase::addDatabase("QSQLITE")}; // static omurlu olmali veya dynamically create etmeliyim cunku ctor'in scope'u bitince bunun omru bitecek. ama QSqlTableModel nesnesi araciligiyla kullanimda olmaya devam edecek. ama bi problem cikmadi. it is what ub is!
-    db.setDatabaseName(".bilgiyarismasi.db");
+//    static QSqlDatabase db{QSqlDatabase::addDatabase("QSQLITE")}; // static omurlu olmali veya dynamically create etmeliyim cunku ctor'in scope'u bitince bunun omru bitecek. ama QSqlTableModel nesnesi araciligiyla kullanimda olmaya devam edecek. ama bi problem cikmadi. it is what ub is!
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("bilgiyarismasi.db");
     if (!db.open())
     {
         qCritical() << "Failed to open database:" << db.lastError().text();
@@ -27,21 +28,21 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
 //    tableModel->setRelation(2, QSqlRelation("yarismalar", "id", "yarisma_ismi"));
 //    tableModel->select();
 
-    model = new QSqlTableModel(this, db);
-    model->setTable("sorular");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-
-    QSqlQuery query = model->query();
+    QSqlQuery query;// = model->query(); // yorum satiri yapmadan once db hic yokken query.exec calismiyordu, "Driver not loaded Driver not loaded" hatasi veriyordu nedense. baktım QSqlTableModel'deki ctor, db'yi const olarak aliyor. dedim acaba o yuzden mi table olusuramiyor. ama sonra veri girebiliyorum? database'in yapisina bakmak lazim, belki de veri girmekle table olusturmak farkli seylerdir.
 
     if (!query.exec("CREATE TABLE IF NOT EXISTS yarismalar (yarisma_ismi TEXT, sorular BLOB)") ||
             !query.exec("CREATE TABLE IF NOT EXISTS sorular (soru TEXT NOT NULL, cevap TEXT NOT NULL, süre integer NOT NULL)") ||
             !query.exec("CREATE TABLE IF NOT EXISTS muzikler (yol TEXT NOT NULL, isim TEXT NOT NULL)") ||
-            !query.exec("CREATE TABLE IF NOT EXISTS yarisma (takim TEXT, dogru integer yanlis integer sira integer)"))
+            !query.exec("CREATE TABLE IF NOT EXISTS yarisma (takim text, dogru integer, yanlis integer, sira integer)"))
     {
         qCritical() << "Failed to create table:" << query.lastError().text();
         return;
     }
+
+    model = new QSqlTableModel(this, db);
+    model->setTable("sorular");     // sonradan farkettim: bu daha once exec'lerden onceydi. daha bu table yokken set ediyodum.
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    qDebug() << "model->select():" << model->select();    // ya bunun geri donus degeri varmis. kontrol etmek lazim. bak etseydim daha erken farkedebilirdim sorunu. edit: ama qt'nin kendi verdigi ornekte kontrol etmemis. aklimda olmali demek ki
 
     model->setHeaderData(0, Qt::Horizontal, tr("Soru"));
     model->setHeaderData(1, Qt::Horizontal, tr("Cevap"));

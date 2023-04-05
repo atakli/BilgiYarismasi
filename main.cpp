@@ -5,13 +5,13 @@
 #include <QFile>
 #include <QDir>
 
-//QString dbName = ".bilgiyarismasi.db";
-
 int main(int argc, char *argv[])
 {
 //    Q_INIT_RESOURCE(masterdetail);
 
     QApplication app(argc, argv);
+
+    app.setWindowIcon(QIcon{":/opened_book.ico"});
 
     const QString saveDir = QDir::home().filePath(".bilgiYarismasi");
     QDir d;

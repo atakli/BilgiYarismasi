@@ -7,6 +7,7 @@
 class QMediaPlayer;
 class QAudioOutput;
 
+#include "updatecontroller.h"
 #include "qaform.h"
 
 namespace Ui { class StackedWidget; }
@@ -34,14 +35,16 @@ private:
     QaForm qaForm;
     QTimer *timer_clock = nullptr;
     void (MainWindowNew::*slot)() = nullptr;
-    bool isChangeNextQuestionImmediately, isWaitForNextQuestion = true;
+    bool isChangeNextQuestionImmediately;
+    bool isWaitForNextQuestion = true;
     bool isFirstQuestion = true;
     QTimer *timer_question = nullptr;
-    void startQuestion();
     QMediaPlayer* player;
     QAudioOutput* audioOutput;
+    UpdateController update;
+    void startQuestion();
 private slots:
-    void onClicked_continuePushButton(bool flag);
+    void onClicked_nextQuestionCheckBox(bool flag);
     void finishCompetition();
     void startCompetition();
     void nextQuestion();
