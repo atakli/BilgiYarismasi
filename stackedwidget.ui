@@ -14,7 +14,7 @@
    <string>Yarışma Uygulaması</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>1</number>
   </property>
   <widget class="QWidget" name="settingsPage">
    <property name="sizePolicy">
@@ -23,156 +23,99 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QPushButton" name="startCompetitionPushButton">
-    <property name="geometry">
-     <rect>
-      <x>9</x>
-      <y>752</y>
-      <width>227</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string>Yarışmayı Başlat</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="musicNameLabel">
-    <property name="geometry">
-     <rect>
-      <x>433</x>
-      <y>17</y>
-      <width>16</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addCompetitionButton">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>10</y>
-      <width>144</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Yarışma Ekle</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addQAButton">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>10</y>
-      <width>144</width>
-      <height>48</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Soru &amp;&amp; Cevap Listesi</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="NextQGroupBox">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>260</y>
-      <width>249</width>
-      <height>70</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Bir sorudan diğerine hemen geçmesin</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="1">
+     <widget class="QLabel" name="musicNameLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="musicGroupBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>134</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Müzik Olsun mu?</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>İki soru arasında beklenecek süre: </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="spinBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QPushButton" name="musicSelectButton">
+           <property name="text">
+            <string>Müzik Seç</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="musicLineEdit"/>
+         </item>
+        </layout>
        </item>
       </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QGroupBox" name="musicGroupBox">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>134</width>
-      <height>99</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>134</width>
-      <height>0</height>
-     </size>
-    </property>
-    <property name="title">
-     <string>Müzik Olsun mu?</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>false</bool>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="musicSelectButton">
-         <property name="text">
-          <string>Müzik Seç</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="musicLineEdit"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="addCompetitionButton">
+      <property name="text">
+       <string>Yarışma Ekle</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QCheckBox" name="nextQuestionCheckBox">
+      <property name="text">
+       <string>Bir sorudan diğerine hemen geçmesin</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="addQAButton">
+      <property name="text">
+       <string>Soru &amp;&amp; Cevap Listesi</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="returnToMainPagePushButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Anasayfaya Dön</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QWidget" name="competitionPage">
    <property name="sizePolicy">
@@ -228,9 +171,9 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="continuePausePushButton">
+         <widget class="QPushButton" name="continuePushButton">
           <property name="text">
-           <string>Devam Ettir / Duraklat</string>
+           <string>Devam Ettir</string>
           </property>
          </widget>
         </item>
@@ -257,7 +200,7 @@
         <item>
          <widget class="QPushButton" name="finishCompetitionPushButton">
           <property name="text">
-           <string>Yarışmayı Bitir</string>
+           <string>&amp;Yarışmayı Başlat</string>
           </property>
          </widget>
         </item>

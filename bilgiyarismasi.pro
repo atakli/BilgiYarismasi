@@ -27,8 +27,7 @@ win32{
 
 win32:RC_ICONS += opened_book.ico  # Icon by Hilmy Abiyyu Asad on freeicons.io
 
-QT += sql widgets
-QT += xml widgets
+QT += sql xml widgets multimedia
 requires(qtConfig(tableview))
 
 EXAMPLE_FILES = albumdetails.xml

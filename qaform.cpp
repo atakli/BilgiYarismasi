@@ -36,6 +36,7 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
 
     if (!query.exec("CREATE TABLE IF NOT EXISTS yarismalar (yarisma_ismi TEXT, sorular BLOB)") ||
             !query.exec("CREATE TABLE IF NOT EXISTS sorular (soru TEXT NOT NULL, cevap TEXT NOT NULL, süre integer NOT NULL)") ||
+            !query.exec("CREATE TABLE IF NOT EXISTS muzikler (yol TEXT NOT NULL, isim TEXT NOT NULL)") ||
             !query.exec("CREATE TABLE IF NOT EXISTS yarisma (takim TEXT, dogru integer yanlis integer sira integer)"))
     {
         qCritical() << "Failed to create table:" << query.lastError().text();

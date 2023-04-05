@@ -13,7 +13,18 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    QDir::setCurrent(QDir::home().absolutePath());
+    const QString saveDir = QDir::home().filePath(".bilgiYarismasi");
+    QDir d;
+    if(!d.exists(saveDir))
+    {
+        if(!d.mkpath(saveDir))
+        {
+            qDebug() << "klasor olusturulamadi:" << saveDir;
+            return -1;
+        }
+    }
+
+    QDir::setCurrent(saveDir);
     MainWindowNew neww;
     neww.show();
 

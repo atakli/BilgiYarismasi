@@ -2,10 +2,14 @@
 #include "ui_stackedwidget.h"
 
 #include <QtConcurrent/QtConcurrent>
+//#include <QMediaPlaylist>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QFontMetrics>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlRecord>
+
 #include <QTime>
 
 #include <QSqlQuery>
@@ -54,16 +58,38 @@ MainWindowNew::MainWindowNew(QStackedWidget *parent) : QStackedWidget(parent), u
 {
 	ui->setupUi(this);
 
-    connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::finishCompetition);
-    connect(ui->startCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
-    connect(ui->settingsPushButton, &QPushButton::clicked, [this]{setCurrentIndex(SettingsPage);});
+    const int height = this->size().height();
+    const int width = this->size().width();
+
+    connect(ui->nextQuestionPushButton, &QPushButton::clicked, [this]{ui->nextQuestionPushButton->setEnabled(false);});
+    connect(ui->nextQuestionCheckBox, &QCheckBox::clicked, this, &MainWindowNew::onClicked_continuePushButton);
+    connect(ui->returnToMainPagePushButton, &QPushButton::clicked, [this, height, width]{setCurrentIndex(CompetitionPage); this->setFixedHeight(height); this->setFixedWidth(width);});
+    connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
+    connect(ui->nextQuestionPushButton, &QPushButton::clicked, this, &MainWindowNew::startQuestion);
+    connect(ui->settingsPushButton, &QPushButton::clicked, [this]{setCurrentIndex(SettingsPage); this->setFixedHeight(200); this->setFixedWidth(550);});
     connect(ui->musicSelectButton, &QPushButton::clicked, this, &MainWindowNew::browseMusic);
     connect(ui->addQAButton, &QPushButton::clicked, this, &MainWindowNew::addQA);
+//    connect(ui->musicGroupBox, &QPushButton::clicked, this, [this](bool isActivated){if (isActivated) });
+
+    player = new QMediaPlayer;
+    audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
+    connect(player, &QMediaPlayer::mediaStatusChanged, [this](QMediaPlayer::MediaStatus status)
+    {
+        if (status == QMediaPlayer::EndOfMedia && ui->musicGroupBox->isChecked())
+        {
+            player->setSource(QUrl::fromLocalFile(ui->musicLineEdit->text()));
+            player->play();
+        }
+    });
+//    audioOutput->setVolume(1);
 }
 
 MainWindowNew::~MainWindowNew()
 {
 	delete ui;
+    delete player;
+    delete audioOutput;
 }
 
 void MainWindowNew::startTimer(int duration_as_sec)
@@ -87,8 +113,8 @@ void MainWindowNew::startTimer(int duration_as_sec)
     timer_question = new QTimer(this);
 
     slot = (recordIndex++ == qaForm.getModel()->rowCount() - 1) ? &MainWindowNew::finishCompetition : &MainWindowNew::nextQuestion;
-
-    connect(timer_question, &QTimer::timeout, this, slot);
+    qDebug() << "recordIndex in starttimer:" << recordIndex;
+    connect(timer_question, &QTimer::timeout, [this]{if (isWaitForNextQuestion) ui->nextQuestionPushButton->setEnabled(true); player->pause(); (this->*slot)();});
     timer_question->start(duration_as_sec * 1000);
 }
 
@@ -101,39 +127,69 @@ void MainWindowNew::startCompetition()
         setCurrentIndex(CompetitionPage);
     else
         return;
-    ui->finishCompetitionPushButton->setEnabled(true);
-    ui->startCompetitionPushButton->setText("Yarışmaya Dön");
-    ui->startCompetitionPushButton->disconnect();
-    connect(ui->startCompetitionPushButton, &QPushButton::clicked, [this]{setCurrentIndex(CompetitionPage);});
+//    ui->startCompetitionPushButton->setText("Yarışmaya Dön");
+//    ui->startCompetitionPushButton->disconnect();
+    ui->finishCompetitionPushButton->setText("Yarışmayı Bitir");
+    ui->finishCompetitionPushButton->disconnect();
+    connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::finishCompetition);
     nextQuestion();
 }
 
 void MainWindowNew::finishCompetition()
 {
-    ui->startCompetitionPushButton->setText("Yarışmayı Başlat");
-    ui->startCompetitionPushButton->disconnect();
-    connect(ui->startCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
+    isFirstQuestion = true;
+    player->stop();
+//    ui->startCompetitionPushButton->setText("Yarışmayı Başlat");
+//    ui->startCompetitionPushButton->disconnect();
+//    connect(ui->startCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
+    ui->finishCompetitionPushButton->setText("Yarışmayı Başlat");
+    ui->finishCompetitionPushButton->disconnect();
+    connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
 //    ui->lcdNumber->setDigitCount(5);
     ui->lcdNumber->display("");
     ui->questionLabel->clear();
     recordIndex = 0;
-    disconnect(timer_question, &QTimer::timeout, this, slot);
+    if (slot != nullptr)
+        disconnect(timer_question, &QTimer::timeout, this, slot);
     delete timer_clock;
     timer_clock = nullptr;
     delete timer_question;      // bunları create delete etmek yerine otomatik omurlu olsun, timer->stop ile yapayim
     timer_question = nullptr;
-    ui->finishCompetitionPushButton->setEnabled(false);
+    ui->nextQuestionPushButton->setEnabled(false);
 }
-
-void MainWindowNew::nextQuestion()
+void MainWindowNew::onClicked_continuePushButton(bool flag) // cok ilginc: bunun ismi on_clicked_continuePushButton iken hata verdi
 {
-//    qDebug() << "nextQuestion";
-
+    isWaitForNextQuestion = flag;
+}
+void MainWindowNew::startQuestion()
+{
+    qDebug() << "recordIndex:" << recordIndex;
     const QSqlRecord record = qaForm.getModel()->record(recordIndex);
     const QString question = record.value(0).toString();
     const int duration = record.value(2).toInt();
+    qDebug() << "question:" << question;
+    qDebug() << "duration:" << duration;
     ui->questionLabel->setText(question);
+    if (ui->musicGroupBox->isEnabled())
+    {
+        player->play();
+    }
     startTimer(duration);
+}
+void MainWindowNew::nextQuestion()
+{
+    if (isFirstQuestion)
+    {
+        isFirstQuestion = false;
+        player->setSource(QUrl::fromLocalFile(ui->musicLineEdit->text()));      // TODO: yarismanin ortasinda music aktiflestirilirse de yap. basa almak zorunda kalinmasin
+        startQuestion();
+    }
+    else if (!isWaitForNextQuestion)
+    {
+        startQuestion();
+    }
+    else
+        timer_question->disconnect();
 }
 
 void MainWindowNew::browseMusic()

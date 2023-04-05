@@ -4,6 +4,9 @@
 #include <QStackedWidget>
 #include <QTimer>
 
+class QMediaPlayer;
+class QAudioOutput;
+
 #include "qaform.h"
 
 namespace Ui { class StackedWidget; }
@@ -30,10 +33,15 @@ private:
     int recordIndex = 0;
     QaForm qaForm;
     QTimer *timer_clock = nullptr;
-    void (MainWindowNew::*slot)();
-    bool isChangeNextQuestionImmediately;
+    void (MainWindowNew::*slot)() = nullptr;
+    bool isChangeNextQuestionImmediately, isWaitForNextQuestion = true;
+    bool isFirstQuestion = true;
     QTimer *timer_question = nullptr;
+    void startQuestion();
+    QMediaPlayer* player;
+    QAudioOutput* audioOutput;
 private slots:
+    void onClicked_continuePushButton(bool flag);
     void finishCompetition();
     void startCompetition();
     void nextQuestion();
