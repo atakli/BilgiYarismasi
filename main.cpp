@@ -1,4 +1,3 @@
-#include "qaWindow.h"
 #include "mainwindownew.h"
 
 #include <QApplication>
@@ -7,8 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-//    Q_INIT_RESOURCE(masterdetail);
-
     QApplication app(argc, argv);
 
     app.setWindowIcon(QIcon{":/opened_book.ico"});
@@ -27,12 +24,5 @@ int main(int argc, char *argv[])
     QDir::setCurrent(saveDir);
     MainWindowNew neww;
     neww.show();
-
-//    if (!createConnection())
-//        return EXIT_FAILURE;
-//    QFile albumDetails("albumdetails.xml");
-//    MainWindow window("artists", "albums", &albumDetails);
-//    window.show();
-
     return app.exec();
 }

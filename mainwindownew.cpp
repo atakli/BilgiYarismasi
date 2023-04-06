@@ -185,7 +185,7 @@ void MainWindowNew::nextQuestion()
     if (isFirstQuestion)
     {
         isFirstQuestion = false;
-        player->setSource(QUrl::fromLocalFile(ui->musicLineEdit->text()));      // TODO: yarismanin ortasinda music aktiflestirilirse de yap. basa almak zorunda kalinmasin
+        player->setSource(QUrl::fromLocalFile(ui->musicLineEdit->text()));
         startQuestion();
     }
     else if (!isWaitForNextQuestion)

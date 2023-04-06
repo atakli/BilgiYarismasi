@@ -171,13 +171,6 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="continuePushButton">
-          <property name="text">
-           <string>Devam Ettir</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="nextQuestionPushButton">
           <property name="enabled">
            <bool>false</bool>
