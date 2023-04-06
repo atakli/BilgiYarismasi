@@ -26,6 +26,8 @@ win32{
     CONFIG += c++2b
 }
 
+#windeployqt.exe bilgiyarismasi.exe -no-translations --no-opengl-sw --no-system-d3d-compiler
+
 win32{
 INCLUDEPATH += "C:\\Users\\Emre ATAKLI\\Documents\\qt\\UpdateController\\include"
 CONFIG(release, debug|release): LIBS += -L"C:\\Users\\Emre ATAKLI\\Documents\\qt\\UpdateController\\build-UpdateController-Desktop_Qt_6_4_1_MSVC2019_64bit-Release\\release\\static" -lupdatecontroller

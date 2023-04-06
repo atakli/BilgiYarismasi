@@ -31,9 +31,9 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
     QSqlQuery query;// = model->query(); // yorum satiri yapmadan once db hic yokken query.exec calismiyordu, "Driver not loaded Driver not loaded" hatasi veriyordu nedense. baktım QSqlTableModel'deki ctor, db'yi const olarak aliyor. dedim acaba o yuzden mi table olusuramiyor. ama sonra veri girebiliyorum? database'in yapisina bakmak lazim, belki de veri girmekle table olusturmak farkli seylerdir.
 
     if (!query.exec("CREATE TABLE IF NOT EXISTS yarismalar (yarisma_ismi TEXT, sorular BLOB)") ||
-            !query.exec("CREATE TABLE IF NOT EXISTS sorular (soru TEXT NOT NULL, cevap TEXT NOT NULL, süre integer NOT NULL)") ||
+            !query.exec("CREATE TABLE IF NOT EXISTS sorular (soru TEXT NOT NULL, cevap TEXT, süre integer NOT NULL)") ||
             !query.exec("CREATE TABLE IF NOT EXISTS muzikler (yol TEXT NOT NULL, isim TEXT NOT NULL)") ||
-            !query.exec("CREATE TABLE IF NOT EXISTS yarisma (takim text, dogru integer, yanlis integer, sira integer)"))
+            !query.exec("CREATE TABLE IF NOT EXISTS yarisma (takim text, dogru integer, yanlis integer, sira integer)"))    // 10-15 satirlik kod verip burdaki yanlislik nedir diye sormustum, chatgpt arasindaki virgulu unuttugumu farketti
     {
         qCritical() << "Failed to create table:" << query.lastError().text();
         return;
@@ -42,7 +42,9 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
     model = new QSqlTableModel(this, db);
     model->setTable("sorular");     // sonradan farkettim: bu daha once exec'lerden onceydi. daha bu table yokken set ediyodum.
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    qDebug() << "model->select():" << model->select();    // ya bunun geri donus degeri varmis. kontrol etmek lazim. bak etseydim daha erken farkedebilirdim sorunu. edit: ama qt'nin kendi verdigi ornekte kontrol etmemis. aklimda olmali demek ki
+    const bool ret = model->select(); // ya bunun geri donus degeri varmis. kontrol etmek lazim. bak etseydim daha erken farkedebilirdim sorunu. edit: ama qt'nin kendi verdigi ornekte kontrol etmemis. aklimda olmali demek ki
+    if(!ret)
+        qDebug() << "model->select():" << ret;
 
     model->setHeaderData(0, Qt::Horizontal, tr("Soru"));
     model->setHeaderData(1, Qt::Horizontal, tr("Cevap"));

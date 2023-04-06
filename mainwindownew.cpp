@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlRecord>
+#include <QScreen>
 
 #include <QTime>
 
@@ -61,12 +62,21 @@ MainWindowNew::MainWindowNew(QStackedWidget *parent) : QStackedWidget(parent), u
     const int height = this->size().height();
     const int width = this->size().width();
 
+    auto locate = [this]
+    {
+        const QScreen *screen = QGuiApplication::primaryScreen();
+        const QRect screenGeometry = screen->geometry();
+        const int x = (screenGeometry.width() - this->width()) / 2;
+        const int y = (screenGeometry.height() - this->height()) / 2;
+        this->move(x, y);
+    };
+
     auto settingsSizeConf = [this]{setCurrentIndex(SettingsPage); this->setFixedHeight(200); this->setFixedWidth(550);};
     settingsSizeConf();
 
     connect(ui->nextQuestionPushButton, &QPushButton::clicked, this, [this]{ui->nextQuestionPushButton->setEnabled(false);});
     connect(ui->nextQuestionCheckBox, &QCheckBox::clicked, this, &MainWindowNew::onClicked_nextQuestionCheckBox);
-    connect(ui->returnToMainPagePushButton, &QPushButton::clicked, this, [this, height, width]{setCurrentIndex(CompetitionPage); this->setFixedSize(width, height);});
+    connect(ui->returnToMainPagePushButton, &QPushButton::clicked, this, [this, height, width, locate]{setCurrentIndex(CompetitionPage); this->setFixedSize(width, height); locate();});
     connect(ui->finishCompetitionPushButton, &QPushButton::clicked, this, &MainWindowNew::startCompetition);
     connect(ui->nextQuestionPushButton, &QPushButton::clicked, this, &MainWindowNew::startQuestion);
     connect(ui->settingsPushButton, &QPushButton::clicked, this, settingsSizeConf);
