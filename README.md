@@ -7,3 +7,5 @@
 * db boşken yarışma başlatılırsa uyarı ver
 * sandbox'ta qt.tlsbackend.ossl: Failed to load libssl/libcrypto. hatasi verdi. 
 * sandbox'ta shortcut'ta icon gorunmuyor. halbuki refer ettigi exe'de icon var
+* sandbox'ta contentAccessDenied hatası verdi, baktım ana makinada da aynı hata. api.json'da günlük api sınırını aştınız yazıyodu. kısa süre sonra gitti nedense. edit: yine verdi.
+* yeni sürümü indirirken şimdi protocolunknown error verdi. edit: sonra vermedi

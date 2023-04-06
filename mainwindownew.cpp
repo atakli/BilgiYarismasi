@@ -85,7 +85,7 @@ MainWindowNew::MainWindowNew(QStackedWidget *parent) : QStackedWidget(parent), u
     connect(ui->checkUpdatesButton, &QPushButton::clicked, this, [this]{update.isNewVersionAvailable(true);});
 //    connect(ui->musicGroupBox, &QPushButton::clicked, this, [this](bool isActivated){if (isActivated) });
 
-    update.setParameters("https://api.github.com/repos/atakli/BilgiYarismasi/releases/latest", appName, "bilgiyarismasi.zip");
+    update.setParameters("https://api.github.com/repos/atakli/BilgiYarismasi/releases/latest", appName, "bilgiyarismasi.exe");
     update.isNewVersionAvailable();
 
     player = new QMediaPlayer;
