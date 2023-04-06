@@ -82,7 +82,7 @@ MainWindowNew::MainWindowNew(QStackedWidget *parent) : QStackedWidget(parent), u
     connect(ui->settingsPushButton, &QPushButton::clicked, this, settingsSizeConf);
     connect(ui->musicSelectButton, &QPushButton::clicked, this, &MainWindowNew::browseMusic);
     connect(ui->addQAButton, &QPushButton::clicked, this, &MainWindowNew::addQA);
-    connect(ui->checkUpdatesButton, &QPushButton::clicked, this, [this]{update.isNewVersionAvailable();});
+    connect(ui->checkUpdatesButton, &QPushButton::clicked, this, [this]{update.isNewVersionAvailable(true);});
 //    connect(ui->musicGroupBox, &QPushButton::clicked, this, [this](bool isActivated){if (isActivated) });
 
     update.setParameters("https://api.github.com/repos/atakli/BilgiYarismasi/releases/latest", appName, "bilgiyarismasi.zip");

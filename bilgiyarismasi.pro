@@ -13,6 +13,8 @@ SOURCES   =  \
 unix:QMAKE_CXXFLAGS += -std=c++2a
 win32:CONFIG += c++2b
 
+CONFIG += console
+
 # windeployqt.exe bilgiyarismasi.exe -no-translations --no-opengl-sw --no-system-d3d-compiler
 
 win32{
