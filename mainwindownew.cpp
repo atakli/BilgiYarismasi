@@ -166,7 +166,7 @@ void MainWindowNew::finishCompetition()
     timer_question = nullptr;
     ui->nextQuestionPushButton->setEnabled(false);
 }
-void MainWindowNew::onClicked_nextQuestionCheckBox(bool flag) // cok ilginc: bunun ismi on_clicked_continuePushButton iken hata verdi
+void MainWindowNew::onClicked_nextQuestionCheckBox(bool flag) // cok ilginc: bunun ismi on ile clicked'in arasinda bosluk varken hata verdi
 {
     isWaitForNextQuestion = flag;
 }

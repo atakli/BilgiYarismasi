@@ -1,21 +1,23 @@
-HEADERS   = dialog.h \
+HEADERS   =  \
+#            dialog.h
 #            addqadialog.h \
 #            database.h \
             mainwindownew.h \
 #            stackedwidget.h \
-            qaWindow.h \
+#            qaWindow.h \
             qaform.h
 
 RESOURCES = masterdetail.qrc \
     icon.qrc
 
-SOURCES   = dialog.cpp \
+SOURCES   =  \
+#            dialog.cpp
 #            addqadialog.cpp \
 #            database.cpp \
             main.cpp \
             mainwindownew.cpp \
 #            stackedwidget.cpp \
-            qaWindow.cpp \
+#            qaWindow.cpp \
             qaform.cpp
 
 unix{
