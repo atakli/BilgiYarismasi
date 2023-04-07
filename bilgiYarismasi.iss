@@ -3,7 +3,7 @@
 
 #define MyAppName "Bilgi Yarismasi"
 ; OutputBaseFilename'den haric her yerde MyAppName olacak
-#define MyAppVersion "0.9.2"
+#define MyAppVersion "0.9.4"
 #define MyAppPublisher "Emre ATAKLI"
 #define MyAppURL "https://github.com/atakli/BilgiYarismasi"
 #define MyAppExeName "bilgiyarismasi.exe"
