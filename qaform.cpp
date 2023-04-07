@@ -1,5 +1,4 @@
 #include "qaform.h"
-//#include "addqadialog.h"
 #include "ui_qaform.h"
 
 //#include <QSqlRelationalTableModel>
@@ -10,7 +9,7 @@
 
 extern QString appName;
 
-QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQaDialog(new AddQaDialog)
+QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)
 {
     ui->setupUi(this);
 
@@ -22,11 +21,6 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
         qCritical() << "Failed to open database:" << db.lastError().text();
         return;												// TODO: constructor'in icinde return etmek dogru mu?
     }
-
-//    tableModel = new QSqlRelationalTableModel(this);
-//    tableModel->setTable("sorular");
-//    tableModel->setRelation(2, QSqlRelation("yarismalar", "id", "yarisma_ismi"));
-//    tableModel->select();
 
     QSqlQuery query;// = model->query(); // yorum satiri yapmadan once db hic yokken query.exec calismiyordu, "Driver not loaded Driver not loaded" hatasi veriyordu nedense. baktım QSqlTableModel'deki ctor, db'yi const olarak aliyor. dedim acaba o yuzden mi table olusuramiyor. ama sonra veri girebiliyorum? database'in yapisina bakmak lazim, belki de veri girmekle table olusturmak farkli seylerdir.
 
@@ -42,37 +36,29 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
     model = new QSqlTableModel(this, db);
     model->setTable("sorular");     // sonradan farkettim: bu daha once exec'lerden onceydi. daha bu table yokken set ediyodum.
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    const bool ret = model->select(); // ya bunun geri donus degeri varmis. kontrol etmek lazim. bak etseydim daha erken farkedebilirdim sorunu. edit: ama qt'nin kendi verdigi ornekte kontrol etmemis. aklimda olmali demek ki
-    if(!ret)
-        qDebug() << "model->select():" << ret;
+    if (!model->select())   // ya bunun geri donus degeri varmis. kontrol etmek lazim. bak etseydim daha erken farkedebilirdim sorunu. edit: ama qt'nin kendi verdigi ornekte kontrol etmemis. aklimda olmali demek ki
+        qDebug() << "model->select(): false";
 
-    model->setHeaderData(0, Qt::Horizontal, tr("Soru"));
-    model->setHeaderData(1, Qt::Horizontal, tr("Cevap"));
-    model->setHeaderData(2, Qt::Horizontal, tr("Süre"));
+    model->setHeaderData(Soru, Qt::Horizontal, tr("Soru"));
+    model->setHeaderData(Cevap, Qt::Horizontal, tr("Cevap"));
+    model->setHeaderData(Sure, Qt::Horizontal, tr("Süre"));
 
     ui->tableView->setWordWrap(false);
     ui->tableView->setModel(model);
-    ui->tableView->hideColumn(1);
+    model->insertColumn(CheckBox);
+    model->setHeaderData(CheckBox, Qt::Horizontal, tr(""));     // basina column ekledigim halde tableview datalari 1. columndan baslayarak yerlestirecegini nerden biliyor?
+    ui->tableView->hideColumn(Cevap);
 
-//    ui->tableView->QTableView::setModel(model);
-//    ui->tableView->resizeColumnsToContents();
-//    ui->tableView->setItemDelegateForColumn(
-//    qDebug() << "header:" << ui->tableView->verticalHeader()->visualIndexAt(0);
-//    qDebug() << "header:" << ui->tableView->selectAll();
-
-//    ui->tableView->selectAll();
-//    qDebug() << "list:" << ui->tableView->selectionModel()->selectedIndexes();
-
-    for (int i = 0; i < 0; ++i)
+    for (int row = 0; row < model->rowCount(); ++row)
     {
-//        ui->tableView->setCellWidget(i, 0, new QCheckBox);
-//        ui->tableView->setIndexWidget(model->index(i, 0), new QCheckBox);
-//        ui->tableView->addScrollBarWidget();
+        ui->tableView->setIndexWidget(model->index(row, CheckBox), new QCheckBox(ui->tableView));
     }
+    ui->tableView->resizeColumnToContents(CheckBox);
 
-    connect(ui->submitButton, &QPushButton::clicked, this, &QaForm::submit);
-    connect(ui->revertButton, &QPushButton::clicked,  model, &QSqlTableModel::revertAll);
     connect(ui->addqaButton, &QPushButton::clicked, this, &QaForm::addRow);
+    connect(ui->submitButton, &QPushButton::clicked, this, &QaForm::submit);
+    connect(ui->removePushButton, &QPushButton::clicked, this, &QaForm::removeRows);
+    connect(ui->revertButton, &QPushButton::clicked,  model, &QSqlTableModel::revertAll);
     connect(ui->showAnswersPushButton, &QPushButton::clicked, this, &QaForm::showHideAnswers);
 
 //    connect(ui->addqaButton, &QPushButton::clicked, this, std::mem_fn(&AddQaDialog::show));
@@ -82,8 +68,6 @@ QaForm::QaForm(QWidget *parent) : QWidget(parent), ui(new Ui::AddqaForm)//, addQ
 QaForm::~QaForm()
 {
     delete ui;
-//    delete tableModel;
-    //    delete addQaDialog;
 }
 
 QSqlTableModel *QaForm::getModel() const
@@ -92,16 +76,23 @@ QSqlTableModel *QaForm::getModel() const
 }
 void QaForm::submit()
 {
-    model->database().transaction();
+    qDebug() << "is transaction successful:" << model->database().transaction();
     if (model->submitAll())
     {
-//        if ()                                                 // column'lardan biri bos birakilirsa uyar. farkindaysa kaydet
-        model->database().commit();
-        ui->tableView->resizeColumnsToContents();
+        ui->tableView->showColumn(Cevap);   // bir hata vardi, degisiklikleri submit edince goruntude problem oluyordu, cevap columnunu show edip en son tekrar hide edince duzeldi nasilsa.
+        qDebug() << "is commit successful:" << model->database().commit();
+        qDebug() << "is insertColumn successful:" << model->insertColumn(CheckBox);
+        ui->tableView->hideColumn(Cevap);
+        for (int i = 0; i < model->rowCount(); ++i)
+        {
+            ui->tableView->setIndexWidget(model->index(i, CheckBox), new QCheckBox(ui->tableView));
+        }
+        ui->tableView->resizeColumnToContents(CheckBox);
+        ui->tableView->hideColumn(Cevap);
     }
     else
     {
-        model->database().rollback();
+        qDebug() << "is rollback successful:" << model->database().rollback();
         QMessageBox::warning(this, tr("Cached Table"), tr("Veritabanı hatası: %1").arg(model->lastError().text()));
     }
 }
@@ -109,8 +100,24 @@ void QaForm::addRow()
 {
     if(!model->insertRow(model->rowCount()))
         QMessageBox::warning(this, appName, "Satır eklenemedi!");
+}
 
-    //        model->removeRow()
+void QaForm::removeRows()
+{
+    const int rows = model->rowCount();
+    qDebug() << "removeRows fonksiyonuna girdiginde" << rows << "adet row var.";
+    if (rows == 0)
+    {
+        QMessageBox msgBox(QMessageBox::Warning, appName, "Hiçbir satırı seçmediniz.", QMessageBox::Ok);
+        msgBox.setButtonText(QMessageBox::Ok, "Tamam");
+        msgBox.exec();
+    }
+    for (int row = 0; row < rows; ++row)
+    {
+        QCheckBox* checkBox = static_cast<QCheckBox*>(ui->tableView->indexWidget(model->index(row, CheckBox)));
+        if (checkBox->isChecked())
+            model->removeRow(row);
+    }
 }
 void QaForm::closeEvent(QCloseEvent*)
 {
@@ -138,14 +145,14 @@ void QaForm::handleDialogResult(int result)
 
 void QaForm::showHideAnswers()
 {
-    if (ui->tableView->isColumnHidden(1))
+    if (ui->tableView->isColumnHidden(Cevap))
     {
-        ui->tableView->showColumn(1);
+        ui->tableView->showColumn(Cevap);
         ui->showAnswersPushButton->setText("Cevapları Gizle");
     }
     else
     {
-        ui->tableView->hideColumn(1);
+        ui->tableView->hideColumn(Cevap);
         ui->showAnswersPushButton->setText("Cevapları Göster");
     }
 }

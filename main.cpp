@@ -1,4 +1,4 @@
-#include "mainwindownew.h"
+#include "mainwindow.h"
 
 #include <QApplication>
 #include <QFile>
@@ -30,6 +30,7 @@ if (argc != 1 && argc != 2)
 #endif
 
     QApplication app(argc, argv);
+    Q_INIT_RESOURCE(resources);
 
     app.setWindowIcon(QIcon{":/opened_book.ico"});
 
@@ -43,17 +44,20 @@ if (argc != 1 && argc != 2)
             return -1;
         }
     }
-    const QString exePath = QFileInfo{argv[0]}.absolutePath();  // burda sorun yasadim, setCurrent argv'yi set ediyor zannettim, sorunun sebebi de bu sandım. meger o set etmiyormus, programfiles'a yaptigim kurulumda klasorun isminde turkce karakterler oldugu icinmis. bir iki saatim gitti ama cozdum. edit: hayir set ediyormus gercekten :(((( ama turkce karakterde sorun var yine de muhtemelen
+//    const QString exePath = QFileInfo{argv[0]}.absolutePath();  // burda sorun yasadim, setCurrent argv'yi set ediyor zannettim, sorunun sebebi de bu sandım. meger o set etmiyormus, programfiles'a yaptigim kurulumda klasorun isminde turkce karakterler oldugu icinmis. bir iki saatim gitti ama cozdum. edit: hayir set ediyormus gercekten :(((( ama turkce karakterde sorun var yine de muhtemelen
     qDebug() << "setCurrent islemi basarili:" << QDir::setCurrent(saveDir);
-    const QString versionTxtPath = QDir{exePath}.filePath("version.txt");
+//    const QString versionTxtPath = QDir{exePath}.filePath("version.txt");
+    const QString versionTxtPath = QDir{saveDir}.filePath("version.txt");
     qDebug() << "version.txt path:" << versionTxtPath;
-    if (!QFileInfo{"version.txt"}.exists())
-        qDebug() << "version.txt yok!";
-    if (QFileInfo{"version.txt"}.exists())
-        qDebug() << "version.txt silme islemi basarili:" << QFile::remove("version.txt");
-    qDebug() << "version.txt kopyalama islemi basarili:" << QFile::copy(versionTxtPath, "version.txt");
 
-    MainWindowNew neww;
-    neww.show();
+    QFile(versionTxtPath).setPermissions(QFile(versionTxtPath).permissions() | QFileDevice::WriteUser);
+
+    if (QFileInfo{versionTxtPath}.exists())
+        qDebug() << "version.txt silme islemi basarili:" << QFile::remove(versionTxtPath);
+//    qDebug() << "version.txt kopyalama islemi basarili:" << QFile::copy(versionTxtPath, "version.txt");
+    qDebug() << "version.txt kopyalama islemi basarili:" << QFile::copy(":/version.txt", "version.txt");
+
+    MainWindow window;
+    window.show();
     return app.exec();
 }

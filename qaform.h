@@ -5,9 +5,10 @@
 #include <QWidget>
 
 //class QSqlRelationalTableModel;
-class AddQaDialog;
 
 namespace Ui { class AddqaForm; }
+
+enum Columns {CheckBox = 0, Soru = 1, Cevap = 2, Sure = 3};
 
 class QaForm : public QWidget
 {
@@ -16,11 +17,9 @@ public:
     explicit QaForm(QWidget *parent = nullptr);
     ~QaForm();
     QSqlTableModel* getModel() const;
-
 private:
     QSqlTableModel *model;
     QSqlDatabase db;
-//    AddQaDialog* addQaDialog;
     Ui::AddqaForm *ui;
     int rowIndex = 0;
     void submit();
@@ -28,8 +27,9 @@ private:
 //    QSqlRelationalTableModel *tableModel;
 private slots:
     void addRow();
-    void handleDialogResult(int result);
+    void removeRows();
     void showHideAnswers();
+    void handleDialogResult(int result);
 };
 
 #endif // QAFORM_H

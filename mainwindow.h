@@ -1,5 +1,5 @@
-#ifndef MAINWINDOWNEW_H
-#define MAINWINDOWNEW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QStackedWidget>
 #include <QTimer>
@@ -12,44 +12,32 @@ class QAudioOutput;
 
 namespace Ui { class StackedWidget; }
 
-extern QString dbName;
-
-bool createConnection();
-
-struct Question
-{
-    QString question;
-    int duration_min, duration_sec;
-};
-
-class MainWindowNew : public QStackedWidget
+class MainWindow : public QStackedWidget
 {
     Q_OBJECT
 public:
-    MainWindowNew(QStackedWidget* parent = nullptr);
-	~MainWindowNew();
-    Ui::StackedWidget* ui;
+    MainWindow(QStackedWidget* parent = nullptr);
+    ~MainWindow();
     void startTimer(int duration_as_sec);
 private:
     int recordIndex = 0;
     QaForm qaForm;
     QTimer *timer_clock = nullptr;
-    void (MainWindowNew::*slot)() = nullptr;
+    void (MainWindow::*slot)() = nullptr;
     bool isChangeNextQuestionImmediately;
     bool isWaitForNextQuestion = true;
     bool isFirstQuestion = true;
     QTimer *timer_question = nullptr;
-    QMediaPlayer* player;
-    QAudioOutput* audioOutput;
+    std::unique_ptr<QMediaPlayer> player;
+    Ui::StackedWidget* ui;
+    std::unique_ptr<QAudioOutput> audioOutput;
     UpdateController update;
     void startQuestion();
 private slots:
-    void onClicked_nextQuestionCheckBox(bool flag);
     void finishCompetition();
     void startCompetition();
     void nextQuestion();
     void browseMusic();
-    void addQA();
 };
 
-#endif // MAINWINDOWNEW_H
+#endif // MAINWINDOW_H

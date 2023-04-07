@@ -57,6 +57,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="removePushButton">
+       <property name="text">
+        <string>Seçili Satırları Sil</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

@@ -1,13 +1,13 @@
 HEADERS   =  \
-            mainwindownew.h \
+            mainwindow.h \
             qaform.h
 
 RESOURCES = \
-            icon.qrc
+    resources.qrc
 
 SOURCES   =  \
             main.cpp \
-            mainwindownew.cpp \
+            mainwindow.cpp \
             qaform.cpp
 
 unix:QMAKE_CXXFLAGS += -std=c++2a
