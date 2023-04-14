@@ -12,6 +12,7 @@
 
 int main(int argc, char *argv[])
 {
+#ifdef WIN32
 #ifndef _DEBUG  // COK HOS
 if (argc != 1 && argc != 2)
     {
@@ -22,11 +23,12 @@ if (argc != 1 && argc != 2)
     {
         FreeConsole();
     }
-    else if(strcmp(argv[1], "--enable-logging"))
+    else if(strcmp(argv[1], "--enable-logging" ))
     {
         std::cerr << "The given argument is wrong! Only the argument --enable-logging is accepted." << std::endl;
         return -2;
     }
+#endif
 #endif
 
     QApplication app(argc, argv);
